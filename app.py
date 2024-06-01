@@ -2,8 +2,6 @@ from flask import Flask, render_template, request
 import google.generativeai as palm
 import replicate
 import os
-import sqlite3
-import datetime
 from flask import Markup
 
 flag = 1
@@ -25,13 +23,6 @@ def main():
     print("flag", flag)
     if flag == 1:
         name = request.form.get("q")
-        current_time = datetime.datetime.now()
-        conn = sqlite3.connect("log (1).db")
-        c = conn.cursor()
-        c.execute("insert into user (name,time) values (?,?)",(name,current_time))
-        conn.commit()
-        c.close()
-        conn.close()
         flag = 0
     return(render_template("main.html",r=name))
 
@@ -56,6 +47,10 @@ def image_result():
       input = {"prompt":q}
     )
     return(render_template("image_result.html",r=r[0]))
+
+@app.route("/makeup_suggest",methods=["GET","POST"])
+def makeup_suggest():
+    return(render_template("makeup_suggest.html"))
 
 @app.route("/end",methods=["GET","POST"])
 def end():
